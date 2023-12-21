@@ -12,6 +12,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using MentalHealthAp.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using MentalHealthAp.Data;
 
 namespace MentalHealthAp.Controllers
 {
@@ -24,19 +26,22 @@ namespace MentalHealthAp.Controllers
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
         private readonly MailSettings _mailSettings;
+        private readonly AppDbContext _context;
 
         public AccountController(
             UserManager<AppUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration configuration,
             IEmailService emailService,
-            MailSettings mailSettings)
+            MailSettings mailSettings,
+            AppDbContext context)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _emailService = emailService;
             _mailSettings = mailSettings;
+            _context = context;
         }
 
         //Login 
@@ -70,6 +75,17 @@ namespace MentalHealthAp.Controllers
                 });
             }
             return Unauthorized();
+        }
+
+        //accept terms
+        [HttpPost]
+        [Route("terms-and-conditions")]
+        public async Task<ActionResult> ConsultTherapist(TermsAndConditions termsAndConditions)
+        {
+            _context.TermsAndConditions.Add(termsAndConditions);
+            await _context.SaveChangesAsync();
+            return Ok(termsAndConditions);
+
         }
 
         //sign up

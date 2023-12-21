@@ -20,6 +20,8 @@ namespace MentalHealthAp.Data
             public DbSet<Category> Category { get; set; }
             public DbSet<Consultant> Consultant { get; set; }
             public DbSet<Exercise> Exercise { get; set; }
+            public DbSet<Consultation> Consultation { get; set; }
+            public DbSet<TermsAndConditions> TermsAndConditions { get; set; }
         }  
     
 }
